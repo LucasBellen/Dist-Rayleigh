@@ -35,6 +35,10 @@ qrayleigh <- function(u, sigma) {
 # logL(sigma) = sum(log(f(x_i; sigma))) para i = 1, ..., n
 
 loglik_rayleigh <- function(sigma, x) {
+  # Evita valores inválidos de sigma
+  if (sigma <= 0) {
+    return(Inf)  # Retorna infinito se sigma for não-positivo
+  }
   # Calcular a log-verossimilhança somando os logaritmos das densidades
   log_likelihood <- sum(log(rayleigh(x, sigma)))
   
@@ -47,9 +51,8 @@ loglik_rayleigh <- function(sigma, x) {
 
 set.seed(123)  # Definir uma semente para reprodutibilidade
 sigma_true <- 2  # Valor real de 'sigma'
-n <- 5  # Tamanho da amostra
+n <- 10000  # Tamanho da amostra
 
-# Gerar probabilidades uniformemente distribuídas entre 0 e 1
 p <- runif(n)
 
 # Gerar valores simulados da distribuição
@@ -65,11 +68,25 @@ valores_iniciais <- 1
 # Usamos a função 'optim' para encontrar os valores que maximizam a log-verossimilhança
 resultado <- optim(par = valores_iniciais, fn = loglik_rayleigh, x = x_simulado, method = "SANN")
 
-# 6. Exibir os Resultados
+# 6. Estimar os Parâmetros via Método de Momentos
+# O estimador de sigma pelo método de momentos é dado por: 
+# \hat{σ} = \bar{X} / sqrt(π / 2)
+
+sigma_mm <- mean(x_simulado) / sqrt(pi / 2)
+
+# 7. Estimar os Parâmetros via Método dos Quantis
+# Usando a mediana amostral para estimar sigma
+# \hat{σ} = median(x) / sqrt(2 * log(2))
+
+sigma_quantis <- median(x_simulado) / sqrt(2 * log(2))
+
+# 8. Exibir os Resultados
 # Os resultados da otimização incluem os parâmetros estimados de sigma
 
-# Extraindo o parâmetro estimado
-estimates <- resultado$par
+# Extraindo o parâmetro estimado por máxima verossimilhança
+sigma_mle <- resultado$par
 
-cat("Parâmetro σ estimado:", round(estimates[1], 4), "\n")
+cat("Parâmetro σ estimado (MV):", round(sigma_mle, 4), "\n")
+cat("Parâmetro σ estimado (MM):", round(sigma_mm, 4), "\n")
+cat("Parâmetro σ estimado (Quantis):", round(sigma_quantis, 4), "\n")
 cat("Parâmetro σ verdadeiro:", sigma_true, "\n")
