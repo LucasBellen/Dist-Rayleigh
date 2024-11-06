@@ -103,179 +103,30 @@ cat("Parâmetro σ verdadeiro:", sigma_true, "\n")
 
 ### GRAFICO PARA DIFERENTES n's
 
-## n=10
-set.seed(123)  # Definir uma semente para reprodutibilidade
-sigma_true <- 2  # Valor real de 'sigma'
-n1 <- 10 # Tamanho da amostra
+# Função para estimar sigma com base em n
+estimar_sigma <- function(n, sigma_true, valores_iniciais) {
+  set.seed(123)  # Definir uma semente para reprodutibilidade
+  p <- runif(n)  # Gerar probabilidades uniformes entre 0 e 1
+  x_simulado <- qrayleigh(p, sigma_true)  # Gerar valores simulados da distribuição
+  
+  # Usar 'optim' para encontrar o valor estimado de sigma
+  resultado <- optim(par = valores_iniciais, fn = loglik_rayleigh, x = x_simulado, method = "SANN")
+  
+  return(resultado$par)  # Retornar a estimativa
+}
 
-# Gerar probabilidades uniformemente distribuídas entre 0 e 1
-p <- runif(n1)
-
-# Gerar valores simulados da distribuição
-x_simulado <- qrayleigh(p, sigma_true)
-
-# Valor inicial para sigma
+# Parâmetros
+sigma_true <- 2
 valores_iniciais <- 1
+n_simulacoes <- c(10, 20, 30, 40, 50, 100, 150, 200)
 
-# Usamos a função 'optim' para encontrar os valores que maximizam a log-verossimilhança
-resultado <- optim(par = valores_iniciais, fn = loglik_rayleigh, x = x_simulado, method = "SANN")
+# Calculando as estimativas para diferentes tamanhos de amostra
+estimativas <- sapply(n_simulacoes, estimar_sigma, sigma_true = sigma_true, valores_iniciais = valores_iniciais)
 
-# Extraindo o parâmetro estimado
-estimates <- resultado$par
-
-cat("Parâmetro σ estimado:", round(estimates[1], 4), "\n1")
-cat("Parâmetro σ verdadeiro:", sigma_true, "\n1")
-
-## n=20
-set.seed(123)  # Definir uma semente para reprodutibilidade
-sigma_true <- 2  # Valor real de 'sigma'
-n2 <- 20 # Tamanho da amostra
-
-# Gerar probabilidades uniformemente distribuídas entre 0 e 1
-p <- runif(n2)
-
-# Gerar valores simulados da distribuição
-x_simulado <- qrayleigh(p, sigma_true)
-
-# Usamos a função 'optim' para encontrar os valores que maximizam a log-verossimilhança
-resultado <- optim(par = valores_iniciais, fn = loglik_rayleigh, x = x_simulado, method = "SANN")
-
-# Extraindo o parâmetro estimado
-estimates <- resultado$par
-
-cat("Parâmetro σ estimado:", round(estimates[1], 4), "\n2")
-cat("Parâmetro σ verdadeiro:", sigma_true, "\n2")
-
-## n=30
-set.seed(123)  # Definir uma semente para reprodutibilidade
-sigma_true <- 2  # Valor real de 'sigma'
-n3 <- 30 # Tamanho da amostra
-
-# Gerar probabilidades uniformemente distribuídas entre 0 e 1
-p <- runif(n3)
-
-# Gerar valores simulados da distribuição
-x_simulado <- qrayleigh(p, sigma_true)
-
-# Usamos a função 'optim' para encontrar os valores que maximizam a log-verossimilhança
-resultado <- optim(par = valores_iniciais, fn = loglik_rayleigh, x = x_simulado, method = "SANN")
-
-# Extraindo o parâmetro estimado
-estimates <- resultado$par
-
-cat("Parâmetro σ estimado:", round(estimates[1], 4), "\n3")
-cat("Parâmetro σ verdadeiro:", sigma_true, "\n3")
-
-
-## n=40
-set.seed(123)  # Definir uma semente para reprodutibilidade
-sigma_true <- 2  # Valor real de 'sigma'
-n4 <- 40 # Tamanho da amostra
-
-# Gerar probabilidades uniformemente distribuídas entre 0 e 1
-p <- runif(n4)
-
-# Gerar valores simulados da distribuição
-x_simulado <- qrayleigh(p, sigma_true)
-
-# Usamos a função 'optim' para encontrar os valores que maximizam a log-verossimilhança
-resultado <- optim(par = valores_iniciais, fn = loglik_rayleigh, x = x_simulado, method = "SANN")
-
-# Extraindo o parâmetro estimado
-estimates <- resultado$par
-
-cat("Parâmetro σ estimado:", round(estimates[1], 4), "\n4")
-cat("Parâmetro σ verdadeiro:", sigma_true, "\n4")
-
-## n=50
-set.seed(123)  # Definir uma semente para reprodutibilidade
-sigma_true <- 2  # Valor real de 'sigma'
-n5 <- 50 # Tamanho da amostra
-
-# Gerar probabilidades uniformemente distribuídas entre 0 e 1
-p <- runif(n5)
-
-# Gerar valores simulados da distribuição
-x_simulado <- qrayleigh(p, sigma_true)
-
-# Usamos a função 'optim' para encontrar os valores que maximizam a log-verossimilhança
-resultado <- optim(par = valores_iniciais, fn = loglik_rayleigh, x = x_simulado, method = "SANN")
-
-# Extraindo o parâmetro estimado
-estimates <- resultado$par
-
-cat("Parâmetro σ estimado:", round(estimates[1], 4), "\n5")
-cat("Parâmetro σ verdadeiro:", sigma_true, "\n5")
-
-## n=100
-set.seed(123)  # Definir uma semente para reprodutibilidade
-sigma_true <- 2  # Valor real de 'sigma'
-n6 <- 100 # Tamanho da amostra
-
-# Gerar probabilidades uniformemente distribuídas entre 0 e 1
-p <- runif(n6)
-
-# Gerar valores simulados da distribuição
-x_simulado <- qrayleigh(p, sigma_true)
-
-# Usamos a função 'optim' para encontrar os valores que maximizam a log-verossimilhança
-resultado <- optim(par = valores_iniciais, fn = loglik_rayleigh, x = x_simulado, method = "SANN")
-
-# Extraindo o parâmetro estimado
-estimates <- resultado$par
-
-cat("Parâmetro σ estimado:", round(estimates[1], 4), "\n6")
-cat("Parâmetro σ verdadeiro:", sigma_true, "\n6")
-
-## n=150
-set.seed(123)  # Definir uma semente para reprodutibilidade
-sigma_true <- 2  # Valor real de 'sigma'
-n7 <- 150 # Tamanho da amostra
-
-# Gerar probabilidades uniformemente distribuídas entre 0 e 1
-p <- runif(n7)
-
-# Gerar valores simulados da distribuição
-x_simulado <- qrayleigh(p, sigma_true)
-
-# Usamos a função 'optim' para encontrar os valores que maximizam a log-verossimilhança
-resultado <- optim(par = valores_iniciais, fn = loglik_rayleigh, x = x_simulado, method = "SANN")
-
-# Extraindo o parâmetro estimado
-estimates <- resultado$par
-
-cat("Parâmetro σ estimado:", round(estimates[1], 4), "\n7")
-cat("Parâmetro σ verdadeiro:", sigma_true, "\n7")
-
-## n=200
-set.seed(123)  # Definir uma semente para reprodutibilidade
-sigma_true <- 2  # Valor real de 'sigma'
-n8 <- 200 # Tamanho da amostra
-
-# Gerar probabilidades uniformemente distribuídas entre 0 e 1
-p <- runif(n8)
-
-# Gerar valores simulados da distribuição
-x_simulado <- qrayleigh(p, sigma_true)
-
-# Usamos a função 'optim' para encontrar os valores que maximizam a log-verossimilhança
-resultado <- optim(par = valores_iniciais, fn = loglik_rayleigh, x = x_simulado, method = "SANN")
-
-# Extraindo o parâmetro estimado
-estimates <- resultado$par
-
-cat("Parâmetro σ estimado:", round(estimates[1], 4), "\n8")
-cat("Parâmetro σ verdadeiro:", sigma_true, "\n8")
-
-
-#### GRAFICO
-
-# Definindo o valor real
-valor_real <- 2  # Substitua pelo seu valor real
-
-# Definindo os valores de n e as estimativas
-n_simulacoes <- c(10,20,30,40,50,100,150,200)  # Substitua pelos seus valores de n
-estimativas <- c(2.1747,2.1805,2.2459,2.2181,2.0852,1.975,2.0066,1.9855)    # Substitua pelas suas estimativas correspondentes
+# Exibindo as estimativas e o valor real de sigma
+for (i in 1:length(n_simulacoes)) {
+  cat("Para n =", n_simulacoes[i], ": σ estimado =", round(estimativas[i], 4), "; σ verdadeiro =", sigma_true, "\n")
+}
 
 # Criando o gráfico
 plot(n_simulacoes, estimativas, type = "l", col = "blue", 
@@ -283,7 +134,7 @@ plot(n_simulacoes, estimativas, type = "l", col = "blue",
      ylab = "Estimativa", main = "Gráfico de Convergência", pch = 16)
 
 # Adicionando a linha do valor real
-abline(h = valor_real, col = "red", lty = 2)
+abline(h = sigma_true, col = "red", lty = 2)
 
 # Adicionando as etiquetas nos pontos
 text(n_simulacoes, estimativas, labels = round(estimativas, 2), pos = 3, cex = 0.8, col = "blue")
@@ -294,7 +145,6 @@ points(n_simulacoes, estimativas, pch = 16, col = "blue")
 # Adicionando uma legenda
 legend("topright", legend = c("Estimativa", "Valor Real"),
        col = c("blue", "red"), lty = c(1, 2), pch = c(16, NA), lwd = c(1, 1))
-
 
 ### MONTE CARLO
 
@@ -387,7 +237,6 @@ grafico <- ggplot(df_estimates, aes(x = Estimativas)) +
 
 # Exibir o gráfico
 print(grafico)
-
 
 
 
