@@ -98,6 +98,99 @@ cat("Parâmetro σ verdadeiro:", sigma_true, "\n")
 
 ################ A partir daqui as simulações de Monte Carlo
 
+### Simulação de Monte Carlo para o Método dos Momentos (MM) ###
+# Parâmetros da simulação
+set.seed(123)         # Para reprodutibilidade
+sigma_true <- 2       # Valor verdadeiro de 'sigma'
+n <- 100              # Tamanho da amostra em cada simulação
+num_sim <- 1000       # Número de simulações de Monte Carlo
+
+# Vetor para armazenar as estimativas de sigma em cada simulação
+estimativas_sigma_mm <- numeric(num_sim)
+
+# Função para realizar uma única estimativa de sigma pelo método dos momentos
+simular_estimacao_mm <- function(n, sigma_true) {
+  # Gerar probabilidades uniformemente distribuídas
+  p <- runif(n)
+  # Gerar uma amostra da distribuição Rayleigh
+  x_simulado <- qrayleigh(p, sigma_true)
+  # Estimar sigma pelo método dos momentos
+  sigma_mm <- mean(x_simulado) / sqrt(pi / 2)
+  # Retornar a estimativa de sigma
+  return(sigma_mm)
+}
+
+# Realizar a simulação de Monte Carlo
+for (i in 1:num_sim) {
+  estimativas_sigma_mm[i] <- simular_estimacao_mm(n, sigma_true)
+}
+
+# Análise dos Resultados da Simulação
+# Calculando estatísticas para avaliar a estimativa de sigma
+media_estimativa_mm <- mean(estimativas_sigma_mm)
+viés_mm <- media_estimativa_mm - sigma_true
+erro_quadratico_medio_mm <- mean((estimativas_sigma_mm - sigma_true)^2)
+
+# Exibir resultados
+cat("Resultados da Simulação de Monte Carlo - Método dos Momentos:\n")
+cat("Valor verdadeiro de σ:", sigma_true, "\n")
+cat("Média das estimativas de σ:", round(media_estimativa_mm, 4), "\n")
+cat("Viés da estimativa de σ:", round(viés_mm, 4), "\n")
+cat("Erro quadrático médio (EQM):", round(erro_quadratico_medio_mm, 4), "\n")
+
+
+### Simulação de Monte Carlo para o Método dos Quantis (MQ) ###
+
+# Parâmetros da simulação (os mesmos de antes)
+set.seed(123)         # Para reprodutibilidade
+sigma_true <- 2       # Valor verdadeiro de 'sigma'
+n <- 100              # Tamanho da amostra em cada simulação
+num_sim <- 1000       # Número de simulações de Monte Carlo
+
+# Vetor para armazenar as estimativas de sigma em cada simulação
+estimativas_sigma_mq <- numeric(num_sim)
+
+# Função para realizar uma única estimativa de sigma pelo método dos quantis
+simular_estimacao_mq <- function(n, sigma_true) {
+  # Gerar probabilidades uniformemente distribuídas
+  p <- runif(n)
+  # Gerar uma amostra da distribuição Rayleigh
+  x_simulado <- qrayleigh(p, sigma_true)
+  # Estimar sigma pelo método dos quantis usando a mediana amostral
+  sigma_mq <- median(x_simulado) / sqrt(2 * log(2))
+  # Retornar a estimativa de sigma
+  return(sigma_mq)
+}
+
+# Realizar a simulação de Monte Carlo
+for (i in 1:num_sim) {
+  estimativas_sigma_mq[i] <- simular_estimacao_mq(n, sigma_true)
+}
+
+# Análise dos Resultados da Simulação
+# Calculando estatísticas para avaliar a estimativa de sigma
+media_estimativa_mq <- mean(estimativas_sigma_mq)
+viés_mq <- media_estimativa_mq - sigma_true
+erro_quadratico_medio_mq <- mean((estimativas_sigma_mq - sigma_true)^2)
+
+# Exibir resultados
+cat("\nResultados da Simulação de Monte Carlo - Método dos Quantis:\n")
+cat("Valor verdadeiro de σ:", sigma_true, "\n")
+cat("Média das estimativas de σ:", round(media_estimativa_mq, 4), "\n")
+cat("Viés da estimativa de σ:", round(viés_mq, 4), "\n")
+cat("Erro quadrático médio (EQM):", round(erro_quadratico_medio_mq, 4), "\n")
+
+### Comparação dos Resultados entre os Métodos ###
+# Criando uma tabela com os resultados dos três métodos
+tabela_comparativa <- data.frame(
+  Método = c("Máxima Verossimilhança", "Método dos Momentos", "Método dos Quantis"),
+  `Média das estimativas de σ` = round(c(media_estimativa, media_estimativa_mm, media_estimativa_mq), 4),
+  `Viés da estimativa de σ` = round(c(viés, viés_mm, viés_mq), 4),
+  `Erro quadrático médio (EQM)` = round(c(erro_quadratico_medio, erro_quadratico_medio_mm, erro_quadratico_medio_mq), 4)
+)
+
+# Exibindo a tabela
+print(tabela_comparativa)
 
 
 
